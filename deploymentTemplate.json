@@ -46,12 +46,46 @@
           "customize": [
             {
                 "type": "PowerShell",
-                "name": "Install Choco and Vscode",
+                "name": "OptimizeOS",
+                "runElevated": true,
+                "runAsSystem": true,
+                "scriptUri": "https://raw.githubusercontent.com/victorjeanmihu/avdimagebuilder/main/scripts/Optimize-OS.ps1"
+            },              
+            {
+                "type": "PowerShell",
+                "name": "Install Choco",
                 "inline": [
-                    "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
-                    "choco install -y vscode"
+                    "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
                 ]
-            }
+            },
+            {
+                "type": "PowerShell",
+                "name": "Install Vscode",
+                "inline": [
+                    "choco install vscode -y﻿"
+                ]
+            },
+            {
+                "type": "PowerShell",
+                "name": "Install IntelliJ",
+                "inline": [
+                    "choco install intellijidea -y﻿"
+                ]
+            },
+            {
+                "type": "WindowsUpdate",
+                "searchCriteria": "IsInstalled=0",
+                "filters": [
+                    "exclude:$_.Title -like '*Preview*'",
+                    "include:$true"
+                            ],
+                "updateLimit": 40
+            },
+            {
+                "type": "WindowsRestart",
+                "restartCheckCommand": "write-host 'restarting post windows update'",
+                "restartTimeout": "5m"
+            }              
           ],
             "distribute": 
             [
